@@ -6,6 +6,7 @@ import org.jeremy.bot.sport.football.api.clients.league.LeagueStandingClient;
 import org.jeremy.bot.sport.football.api.response.league.standing.FootballLeagueResponseWrapper;
 import org.jeremy.bot.sport.football.api.response.league.standing.FootballLeagueStandingResponse;
 import org.jeremy.bot.sport.football.api.response.league.standing.GenericApiResponse;
+import org.jeremy.bot.utils.ApplicationPropertiesUtils;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,12 +17,17 @@ import java.net.http.HttpResponse;
 public class LeagueStandingClientImpl implements LeagueStandingClient {
 
     private final ObjectMapper om = new ObjectMapper();
+    private final String API_KEY_PROP = "rapid.api.key";
+    private final String API_HOST_PROP = "rapid.api.host";
+
     @Override
     public FootballLeagueStandingResponse getLaLigaStanding() throws IOException, InterruptedException {
+        String rapidApiHost = ApplicationPropertiesUtils.getAppProperties(API_HOST_PROP);
+        String rapidApiKey = ApplicationPropertiesUtils.getAppProperties(API_KEY_PROP);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/standings?season=2023&league=140"))
-                .header("X-RapidAPI-Key", "3a6ba580d8msh4bac8a4c322638ap1c2913jsn83359bf9c20f")
-                .header("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
+                .header("X-RapidAPI-Key", rapidApiKey)
+                .header("X-RapidAPI-Host", rapidApiHost)
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
@@ -36,10 +42,12 @@ public class LeagueStandingClientImpl implements LeagueStandingClient {
 
     @Override
     public FootballLeagueStandingResponse getPremStanding() throws IOException, InterruptedException {
+        String rapidApiHost = ApplicationPropertiesUtils.getAppProperties(API_HOST_PROP);
+        String rapidApiKey = ApplicationPropertiesUtils.getAppProperties(API_KEY_PROP);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api-football-v1.p.rapidapi.com/v3/standings?season=2023&league=39"))
-                .header("X-RapidAPI-Key", "3a6ba580d8msh4bac8a4c322638ap1c2913jsn83359bf9c20f")
-                .header("X-RapidAPI-Host", "api-football-v1.p.rapidapi.com")
+                .header("X-RapidAPI-Key", rapidApiKey)
+                .header("X-RapidAPI-Host", rapidApiHost)
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .build();
         HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());

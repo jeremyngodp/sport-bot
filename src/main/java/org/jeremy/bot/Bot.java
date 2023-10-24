@@ -5,12 +5,14 @@ import org.jeremy.bot.sport.football.api.clients.league.LeagueStandingClient;
 import org.jeremy.bot.sport.football.api.clients.league.impl.LeagueStandingClientImpl;
 import org.jeremy.bot.sport.football.api.response.league.standing.FootballLeagueStandingResponse;
 import org.jeremy.bot.sport.football.api.response.league.standing.FootballLeagueStandingTeamResponse;
+import org.jeremy.bot.utils.ApplicationPropertiesUtils;
 import org.jeremy.bot.utils.ResponseFormattingUtils;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class Bot  extends TelegramLongPollingBot{
@@ -19,6 +21,7 @@ public class Bot  extends TelegramLongPollingBot{
     public Bot() {
         super();
         this.leagueStandingClient = new LeagueStandingClientImpl();
+
     }
     @Override
     public String getBotUsername() {
@@ -27,7 +30,12 @@ public class Bot  extends TelegramLongPollingBot{
 
     @Override
     public String getBotToken() {
-        return "6364775510:AAHlEzBLcfxC_lcbLs936cZMvhyTd4UVSqI";
+        try {
+            return ApplicationPropertiesUtils.getAppProperties("bot.api.token");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Cannot load bot token api");
+        }
     }
 
     @Override
